@@ -2,6 +2,11 @@
 
 A powerful tool that helps pharmacists analyze prescriptions and manage medicine inventory using AI.
 
+
+<div align="center">
+  <video width="100%" src="demo/mediscan-demo.mp4" />
+</div>
+
 ## Features
 
 - 📋 Prescription Image Analysis using Google's Gemini AI
