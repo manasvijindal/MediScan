@@ -13,16 +13,14 @@ A powerful tool that helps pharmacists analyze prescriptions and manage medicine
 - 💊 Medicine Inventory Management
 - 🔍 Smart Medicine Matching
 - 📊 Detailed Medicine Information
-- 🛒 Shopping Cart System
-- 📄 PDF Invoice Generation
+- 🛒 Order Generation
 
 ## Tech Stack
 
 - **Frontend**: Streamlit
 - **Backend**: FastAPI
 - **AI/ML**: Google Gemini AI
-- **Database**: SQLite
-- **PDF Generation**: FPDF
+- **Database**: Supabase
 
 ## Setup
 
@@ -66,7 +64,7 @@ streamlit run app.py
 2. Click "Analyze" to extract prescription details
 3. View matched medicines from inventory
 4. Add medicines to cart
-5. Generate and download invoice
+5. Generate order summary
 
 ## Contributing
 

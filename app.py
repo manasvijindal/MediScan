@@ -73,6 +73,12 @@ def generate_invoice():
     return pdf.output(dest='S').encode('latin1')
 
 def main():
+    # Set the page title and favicon
+    st.set_page_config(
+        page_title="MediScan",
+        page_icon="🩺"
+    )
+    
     initialize_cart()
 
     # ==== APP HEADER ====
