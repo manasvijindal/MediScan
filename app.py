@@ -72,35 +72,8 @@ def generate_invoice():
     
     return pdf.output(dest='S').encode('latin1')
 
-
 def main():
     initialize_cart()
-
-    # Add some page-wide styling for a bit more polish
-    st.markdown(
-        """
-        <style>
-        h1 {
-            color: #2F4F4F;
-        }
-        .hero {
-            background-color: #f0f2f6;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 1rem;
-        }
-        .hero h2 {
-            margin-top: 0;
-            color: #2d4a5a;
-        }
-        .hero p {
-            font-size: 1.1rem;
-            color: #333;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
     st.title("MediScan - Pharmacist's Assistant")
     st.write("📋 Upload a clear prescription image, and I'll help you extract medication details and fetch medicines from the inventory!")
@@ -111,31 +84,8 @@ def main():
         type=['jpg', 'jpeg', 'png']
     )
 
-    # If no file is uploaded, show a "hero" section with instructions
-    if not uploaded_file and "search_results" not in st.session_state:
-        st.markdown(
-            """
-            <div class="hero">
-                <h2>Welcome to MediScan</h2>
-                <p>
-                  This tool helps you quickly extract information from prescription images
-                  and find medicine matches in your inventory.
-                </p>
-                <h4>How it works:</h4>
-                <ol>
-                  <li>Upload your prescription image.</li>
-                  <li>Click "Analyze" to let Gemini extract the text.</li>
-                  <li>We fuzzy-match the medicines against your database.</li>
-                  <li>Choose the quantity of each medicine to create an order.</li>
-                  <li>Generate and download your invoice!</li>
-                </ol>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    # If a file is uploaded, proceed with analysis
-    if uploaded_file:
+    if uploaded_file is not None:
+        # Show the uploaded image
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Prescription", use_container_width=True)
 
@@ -242,7 +192,7 @@ def main():
             # Save results so they persist across reruns
             st.session_state.search_results = all_matches
 
-    # If we have search_results in session_state, display them
+    # If we have search results in session_state, display them
     if 'search_results' in st.session_state:
         all_matches = st.session_state.search_results
 
@@ -261,7 +211,7 @@ def main():
                             name = name[0].upper() + name[1:].lower()  # Title-case
                         st.markdown(f"#### {matches.index(row) + 1}. {name}")
 
-                        # 2) Let user pick quantity
+                        # 2) Let user pick quantity (moved up)
                         price = float(row.get('price', 0))
                         qty_avail = int(row.get('quantity_available', 0))
                         cart_item = st.session_state.cart.get(name, {})
@@ -305,7 +255,6 @@ def main():
 
                         for label, key in fields_to_display:
                             val = row.get(key)
-                            # Skip if empty or "unknown"
                             if val and str(val).strip().lower() not in ["unknown", "n/a", "not available", "-"]:
                                 table_data.append([f"**{label}**", str(val)])
 
@@ -379,20 +328,10 @@ def main():
             total += subtotal
 
             st.sidebar.markdown(f"**{med}**")
-            st.sidebar.markdown(f"Quantity: {qty}  \nPrice: ₹{price}  \nTotal: ₹{round(subtotal)}")
+            st.sidebar.markdown(f"Quantity: {qty}  \nPrice: ₹{price}  \nTotal: {qty} × {price} = ₹{round(subtotal)}")
             st.sidebar.markdown("---", unsafe_allow_html=True)
 
         st.sidebar.markdown(f"### Total Amount: ₹{round(total)}")
-
-        # Optionally, add a button to download invoice
-        if st.sidebar.button("Download Invoice"):
-            pdf_bytes = generate_invoice()
-            st.sidebar.download_button(
-                label="Download Invoice PDF",
-                data=pdf_bytes,
-                file_name="order_invoice.pdf",
-                mime="application/pdf"
-            )
 
 if __name__ == "__main__":
     main()
