@@ -2,18 +2,23 @@
 
 A powerful tool that helps pharmacists analyze prescriptions and manage medicine inventory using AI.
 
-
-<div align="center">
-  <video width="100%" src="demo/mediscan-demo.mp4" />
-</div>
-
 ## Features
 
-- 📋 Prescription Image Analysis using Google's Gemini AI
-- 💊 Medicine Inventory Management
-- 🔍 Smart Medicine Matching
-- 📊 Detailed Medicine Information
-- 🛒 Order Generation
+* 📋 Prescription Image Analysis using Google's Gemini AI
+* 💊 Medicine Inventory Management
+* 🔍 Smart Medicine Matching
+* 📊 Detailed Medicine Information
+* 🛒 Shopping Cart System
+* 📄 PDF Invoice Generation
+
+## Demo
+
+https://github.com/manasvijindal/MediScan/raw/main/demo/mediscan-demo.mp4
+
+Watch the video demo above to see MediScan in action! The demo showcases:
+- Prescription image upload and analysis
+- Medicine matching and alternatives
+- Cart management and invoice generation
 
 ## Tech Stack
 
