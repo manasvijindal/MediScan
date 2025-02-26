@@ -1,0 +1,11 @@
+streamlit
+google-generativeai
+Pillow
+python-dotenv
+requests
+pandas
+fpdf
+fastapi
+uvicorn
+python-multipart
+sqlalchemy 
