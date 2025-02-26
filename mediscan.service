@@ -1,0 +1,16 @@
+[Unit]
+Description=MediScan Streamlit App
+After=network.target
+
+[Service]
+User=mediscan
+Group=mediscan
+WorkingDirectory=/opt/mediscan
+Environment="PATH=/opt/mediscan/venv/bin"
+Environment="GOOGLE_API_KEY=your_api_key"
+ExecStart=/opt/mediscan/venv/bin/streamlit run app.py --server.port=8501 --server.address=127.0.0.1
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target 

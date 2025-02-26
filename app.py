@@ -75,19 +75,48 @@ def generate_invoice():
 def main():
     initialize_cart()
 
-    st.title("MediScan - Pharmacist's Assistant")
-    st.write("📋 Upload a clear prescription image, and I'll help you extract medication details and fetch medicines from the inventory!")
+    # ==== APP HEADER ====
+    st.markdown(
+        "<h1 style='text-align: center; color: #2A5DB0;'>🩺 MediScan - Pharmacist's Assistant</h1>", 
+        unsafe_allow_html=True
+    )
+    st.write(
+        "<h5 style='text-align: center;'>Your AI-powered prescription analyzer & medicine finder</h5>", 
+        unsafe_allow_html=True
+    )
 
-    # Step 1: File Upload
+    # ==== IMAGE UPLOAD SECTION ====
     uploaded_file = st.file_uploader(
-        "Choose a prescription image (JPG/PNG/JPEG)",
+        "📂 **Upload Your Prescription Image** (JPG, PNG, JPEG)",
         type=['jpg', 'jpeg', 'png']
     )
 
-    if uploaded_file is not None:
+    # Show welcome box only when no file is uploaded
+    if not uploaded_file:
+        # ==== WELCOME BOX ====
+        with st.container():
+            st.markdown(
+                """
+                <div style="border-radius: 10px; padding: 20px; background-color: #F5F7FA; text-align: center; box-shadow: 2px 2px 12px rgba(0,0,0,0.1);">
+                    <h2 style="color: #2A5DB0;">🏥 Welcome to MediScan</h2>
+                    <p style="font-size: 24px;"><em>Scan it. Find it. Get it.</em></p>
+                    <hr style="border: 1px solid #D1D5DB; margin: 8px 0;">
+                    <h4>🚀 What Can This App Do?</h4>
+                    <ul style="text-align: left; font-size: 16px;">
+                        <li>📸 Upload a <strong>prescription image</strong> to extract medicine details.</li>
+                        <li>🔍 <strong>Smart medicine matching</strong> to check availability and find substitutes.</li>
+                        <li>📦 Add medicines to <strong>cart and generate an order summary</strong>.</li>
+                        <li>📜 Get a <strong>quick AI-generated summary</strong> of medicines.</li>
+                    </ul>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+    if uploaded_file:
         # Show the uploaded image
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Prescription", use_container_width=True)
+        st.image(image, caption="📜 Uploaded Prescription", use_container_width=True)
 
         # Prompt for Gemini
         prompt = """
@@ -329,7 +358,7 @@ def main():
 
             st.sidebar.markdown(f"**{med}**")
             st.sidebar.markdown(f"Quantity: {qty}  \nPrice: ₹{price}  \nTotal: {qty} × {price} = ₹{round(subtotal)}")
-            st.sidebar.markdown("---", unsafe_allow_html=True)
+            st.sidebar.markdown("<hr style='margin: 5px 0px;'>", unsafe_allow_html=True)
 
         st.sidebar.markdown(f"### Total Amount: ₹{round(total)}")
 

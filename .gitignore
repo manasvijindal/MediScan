@@ -41,4 +41,18 @@ Thumbs.db
 # Project specific
 *.log
 assets/
-prescription-backend/__pycache__/ 
+prescription-backend/__pycache__/
+mediscan.db
+
+# New entries from the code block
+*.env
+*.env
+__pycache__/
+*.pyc
+.DS_Store
+mediscan.db
+.venv/
+venv/
+.idea/
+.vscode/
+*.log 
