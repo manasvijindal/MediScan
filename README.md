@@ -9,7 +9,6 @@ A powerful tool that helps pharmacists analyze prescriptions and manage medicine
 * 🔍 Smart Medicine Matching
 * 📊 Detailed Medicine Information
 * 🛒 Shopping Cart System
-* 📄 PDF Invoice Generation
 
 ## Demo
 
@@ -67,11 +66,3 @@ streamlit run app.py
 3. View matched medicines from inventory
 4. Add medicines to cart
 5. Generate order summary
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/) 
