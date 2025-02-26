@@ -15,10 +15,7 @@ A powerful tool that helps pharmacists analyze prescriptions and manage medicine
 
 https://github.com/manasvijindal/MediScan/raw/main/demo/mediscan-demo.mp4
 
-Watch the video demo above to see MediScan in action! The demo showcases:
-- Prescription image upload and analysis
-- Medicine matching and alternatives
-- Cart management and invoice generation
+Watch the video demo above to see MediScan in action! 
 
 ## Tech Stack
 
