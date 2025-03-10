@@ -457,7 +457,7 @@ if not uploaded_file:
 if uploaded_file:
     # Show the uploaded image
     image = Image.open(uploaded_file)
-    st.image(image, caption="📜 Uploaded Prescription", use_column_width=True)
+    st.image(image, caption="📜 Uploaded Prescription", use_container_width=True)
 
     # Prompt for Gemini
     prompt = """
@@ -584,7 +584,7 @@ if uploaded_file:
                             </div>
                         """, unsafe_allow_html=True)
 
-                        # Create expander for details (for both in-stock and out-of-stock items)
+                        # Create expander for details
                         with st.expander(f"View Details"):
                             if qty_avail == 0:
                                 st.error("⚠️ This medicine is currently out of stock")
@@ -617,7 +617,9 @@ if uploaded_file:
                                     suggested_packs = (prescribed_qty + pack_size - 1) // pack_size  # Round up division
                                 
                                 if pack_size > 1 and prescribed_qty > 0:
-                                    st.success(f"💡 Suggestion: Order {suggested_packs} packs to get {suggested_packs * pack_size} units")
+                                    st.success(f"""💡 Suggestion: Order {suggested_packs} pack{'s' if suggested_packs > 1 else ''} to get {suggested_packs * pack_size} units
+                                        {f'' if suggested_packs * pack_size >= prescribed_qty else ''}
+                                    """)
                                 
                                 # Add quantity selector
                                 cart_item = st.session_state.cart.get(name, {})
@@ -630,9 +632,6 @@ if uploaded_file:
                                     value=current_qty,
                                     key=f"{name}_qty"
                                 )
-
-                                if pack_size > 1:
-                                    st.write(f"Total units: {new_qty * pack_size}")
 
                             # Create table data
                             table_data = []
@@ -745,7 +744,34 @@ if uploaded_file:
                                             response = model.generate_content(comparison_prompt)
                                             analysis = response.text
 
-                                            # Display substitute information with analysis
+                                            import re
+
+                                            def clean_html_text(text):
+                                                """
+                                                Remove any unintended HTML tags, including <div>, <br>, etc.
+                                                """
+                                                text = re.sub(r"</?\w+[^>]*>", "", text)  # Remove any HTML tags
+                                                text = text.replace("&nbsp;", " ")  # Replace non-breaking spaces
+                                                return text.strip()  # Ensure no leading/trailing spaces
+
+                                            # Debugging: Print AI-generated analysis before sanitization
+                                            print("DEBUG: Raw AI Analysis Output:\n", analysis)
+
+                                            # Apply sanitization
+                                            cleaned_analysis = clean_html_text(analysis)
+
+                                            # Debugging: Print sanitized output
+                                            print("DEBUG: Cleaned AI Analysis Output:\n", cleaned_analysis)
+
+                                            # Extract the final recommendation (YES or NO)
+                                            final_recommendation = "NO"  # Default value
+                                            if "YES" in cleaned_analysis.upper():
+                                                final_recommendation = "YES"
+
+                                            # Define the color based on recommendation
+                                            recommendation_color = "#28a745" if final_recommendation == "YES" else "#dc3545"
+
+                                            # Display substitute information with improved analysis
                                             st.markdown(f"""
                                                 <div style="padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; margin: 10px 0;">
                                                     <h4 style="color: #2A5DB0;">Alternative Option for {original_med_info['name']}: {sub_med_info['name']}</h4>
@@ -757,10 +783,20 @@ if uploaded_file:
                                                     </div>
                                                     <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0;">
                                                         <strong>AI Analysis:</strong><br>
-                                                        {analysis}
+                                                        {cleaned_analysis}
+                                                        <br><br>
+                                                        <strong style="font-size:1.2rem; color:{recommendation_color};">
+                                                            Substitutable: {final_recommendation}
+                                                        </strong>
                                                     </div>
                                                 </div>
                                             """, unsafe_allow_html=True)
+
+                                            # Display AI Analysis Properly (Avoids Streamlit Object Rendering Issue)
+                                              # This ensures proper rendering without breaking UI
+
+
+
 
                                             # Add to cart option if recommended
                                             if "YES" in analysis.upper():
@@ -914,7 +950,7 @@ if uploaded_file:
                     st.session_state.patient_details['age'] = age_changed
                 
             with col2:
-                gender_changed = st.selectbox("Gender", ["Male", "Female", "Other"], index=["Male", "Female", "Other"].index(st.session_state.patient_details['gender']), key="patient_gender")
+                gender_changed = st.selectbox("Gender", ["Female", "Male", "Other"], index=["Female", "Male", "Other"].index(st.session_state.patient_details['gender']), key="patient_gender")
                 if gender_changed != st.session_state.patient_details['gender']:
                     st.session_state.patient_details['gender'] = gender_changed
                 

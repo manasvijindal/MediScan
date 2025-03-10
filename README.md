@@ -1,68 +1,108 @@
-# MediScan - Pharmacist's Assistant
+# 🩺 MediScan - AI-Powered Prescription Analyzer
 
-A powerful tool that helps pharmacists analyze prescriptions and manage medicine inventory using AI.
+MediScan is an intelligent prescription processing system designed to assist pharmacists in efficiently managing prescriptions, inventory, and medicine substitutions. Built during a hackathon, this solution combines AI-powered prescription analysis with smart inventory management.
 
-## Features
+## 🌟 Key Features
 
-* 📋 Prescription Image Analysis using Google's Gemini AI
-* 💊 Medicine Inventory Management
-* 🔍 Smart Medicine Matching
-* 📊 Detailed Medicine Information
-* 🛒 Shopping Cart System
+### 1. Prescription Analysis
+- 📝 Automated extraction of prescription details using Google's Gemini AI
+- ✅ Doctor's license verification
+- 🔍 Intelligent medicine name recognition
+- 📊 Dosage and quantity analysis
 
-## Demo
+### 2. Smart Medicine Matching
+- 🎯 Fuzzy matching algorithm for medicine names
+- 💊 Intelligent substitute recommendations
+- 📦 Pack size optimization suggestions
+- 💰 Price comparison and availability check
 
-https://github.com/manasvijindal/MediScan/raw/main/demo/mediscan-demo.mp4
+### 3. Inventory Management
+- 📊 Real-time stock tracking
+- ⚠️ Expiry date monitoring
+- 🔄 Low stock alerts
+- 📈 Stock status visualization
 
-Watch the video demo above to see MediScan in action! 
+### 4. Professional Documentation
+- 🧾 Automated invoice generation
+- 📑 Detailed medicine information
+- 📋 Patient record management
+- 🖨️ Professional PDF reports
 
-## Tech Stack
+## 🛠️ Technology Stack
 
-- **Frontend**: Streamlit
-- **Backend**: FastAPI
-- **AI/ML**: Google Gemini AI
-- **Database**: Supabase
+- **Frontend:** Streamlit (Python)
+- **Backend:** FastAPI
+- **Database:** PostgreSQL (Supabase)
+- **AI/ML:** 
+  - Google Gemini 2.0 for prescription analysis
+  - RapidFuzz for medicine matching
+- **Additional Libraries:**
+  - FPDF for PDF generation
+  - Pandas for data manipulation
+  - Python-dotenv for environment management
 
-## Setup
+## 🚀 Getting Started
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/MediScan.git
-cd MediScan
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/MediScan.git
+   cd MediScan
+   ```
 
-2. Create a virtual environment and activate it:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+2. **Set up virtual environment**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4. Set up environment variables:
-Create a `.env` file in the root directory with:
-```
-GOOGLE_API_KEY=your_gemini_api_key
-```
+4. **Set up environment variables**
+   Create a `.env` file with:
+   ```env
+   GOOGLE_API_KEY=your_gemini_api_key
+   SUPABASE_DATABASE_URL=your_database_url
+   ```
 
-5. Start the backend server:
-```bash
-cd prescription-backend
-uvicorn main:app --reload
-```
+5. **Run the application**
+   ```bash
+   streamlit run Prescription.py
+   ```
 
-6. In a new terminal, start the Streamlit app:
-```bash
-streamlit run app.py
-```
+## 💡 Usage
 
-## Usage
+1. **Upload Prescription**
+   - Click "Upload Prescription Image"
+   - Select a clear image of the prescription
+   - Click "Analyze" to process
 
-1. Upload a prescription image
-2. Click "Analyze" to extract prescription details
-3. View matched medicines from inventory
-4. Add medicines to cart
-5. Generate order summary
+2. **Review Medicines**
+   - View matched medicines
+   - Check availability and alternatives
+   - Subtitutes if a medicine out of stock
+
+3. **Generate Order**
+   - Add medicines to cart
+   - Fill patient details
+   - Generate and download invoice
+
+3. **Search for a specific medicine**
+
+5. **Check Expired, Expiry Soon and Out of Stock medicines in inventory**
+
+## 🎯 Target Users
+
+- 💊 Pharmacists
+- 🏥 Pharmacy Staff
+- 📦 Inventory Managers
+
+## Techstack
+
+- Google Gemini AI for prescription analysis
+- Streamlit for the amazing web framework
+- FastAPI for efficient backend processing
+- Supabase for reliable database services
+
