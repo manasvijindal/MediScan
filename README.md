@@ -14,7 +14,6 @@ MediScan is an intelligent prescription processing system designed to assist pha
 - 🎯 Fuzzy matching algorithm for medicine names
 - 💊 Intelligent substitute recommendations
 - 📦 Pack size optimization suggestions
-- 💰 Price comparison and availability check
 
 ### 3. Inventory Management
 - 📊 Real-time stock tracking
@@ -24,9 +23,6 @@ MediScan is an intelligent prescription processing system designed to assist pha
 
 ### 4. Professional Documentation
 - 🧾 Automated invoice generation
-- 📑 Detailed medicine information
-- 📋 Patient record management
-- 🖨️ Professional PDF reports
 
 ## 🛠️ Technology Stack
 
@@ -98,11 +94,3 @@ MediScan is an intelligent prescription processing system designed to assist pha
 - 💊 Pharmacists
 - 🏥 Pharmacy Staff
 - 📦 Inventory Managers
-
-## Techstack
-
-- Google Gemini AI for prescription analysis
-- Streamlit for the amazing web framework
-- FastAPI for efficient backend processing
-- Supabase for reliable database services
-
