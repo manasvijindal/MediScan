@@ -1,6 +1,6 @@
-# 🩺 MediScan - AI-Powered Prescription Analyzer
+# 🩺 MediScan - A Pharmacist Assistent
 
-MediScan is an intelligent prescription processing system designed to assist pharmacists in efficiently managing prescriptions, inventory, and medicine substitutions. Built during a hackathon, this solution combines AI-powered prescription analysis with smart inventory management.
+MediScan is an intelligent prescription processing system designed to assist pharmacists in efficiently managing prescriptions, inventory, and medicine substitutions.
 
 ## 🌟 Key Features
 
