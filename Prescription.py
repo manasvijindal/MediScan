@@ -432,7 +432,7 @@ initialize_cart()
 
 # Remove the top cart display section and keep only the header
 st.markdown('<h1 class="page-header" style="font-family: \'Georgia\', serif; text-align: center; font-size: 3.8rem; color: #2A5DB0; margin-top: 0rem; margin-bottom: 0rem;">🩺MediScan</h1>', unsafe_allow_html=True)
-st.write("<h5 style='text-align: center; margin-top: 0; margin-bottom: 0rem;'>Your AI-powered prescription analyzer & medicine finder</h5>", unsafe_allow_html=True)
+st.write("<h5 style='text-align: center; margin-top: 0; margin-bottom: 0rem;'>Your AI-powered Pharmacist's Assistant</h5>", unsafe_allow_html=True)
 
 # File uploader for prescription image
 uploaded_file = st.file_uploader("📂 **Upload Prescription Image with Valid Doctor's License Number** (JPG, PNG, JPEG)", type=['jpg', 'jpeg', 'png'], label_visibility="visible", key="prescription_uploader", help="Upload a clear image of your prescription")
@@ -444,12 +444,13 @@ if not uploaded_file:
         <div style="border-radius: 10px; padding: 20px; background-color: #F5F7FA; text-align: center; box-shadow: 2px 2px 12px rgba(0,0,0,0.1);">
             <h2 style="font-size: 36px; color: #2A5DB0;"><em>Scan it. Find it. Get it.</em></h2>
             <hr style="border: 1px solid #D1D5DB; margin: 8px 0;">
-            <h4>🚀 What Can This Do?</h4>
+            <h4>🚀 What It Does?</h4>
             <div style="text-align: left; font-size: 18px;">
                 📸 Upload a <strong>prescription image</strong> to extract medicine details.<br>
                 🔍 <strong>Smart medicine matching</strong> to check availability in the inventory.<br>
-                📦 Add medicines to <strong>cart and generate an order summary</strong>.<br>
-                📜 Get a <strong>quick AI-generated summary</strong> of medicines.
+                💊 If the medicine is out of stock, <strong>substitutes</strong> displayed.<br>
+                📜 AI analysis of substitutes and their <strong>compatibility</strong> with the original medicine.<br>
+                📦 Add medicines to <strong>cart, generate an order summary</strong> and download a PDF invoice.<br>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -609,16 +610,27 @@ if uploaded_file:
                                 if pack_size_match:
                                     pack_size = int(pack_size_match.group())
                             
+                            # Calculate if we need substitutes based on prescribed quantity and available stock
+                            need_substitutes = False
+                            remaining_qty_needed = 0
+                            
+                            if prescribed_qty > 0:
+                                max_units_available = qty_avail * pack_size
+                                if prescribed_qty > max_units_available:
+                                    need_substitutes = True
+                                    remaining_qty_needed = prescribed_qty - max_units_available
+                            
                             # Only show suggestion for in-stock items
                             if qty_avail > 0:
                                 # Calculate suggested quantity in packs
                                 suggested_packs = 0
                                 if pack_size > 0 and prescribed_qty > 0:
-                                    suggested_packs = (prescribed_qty + pack_size - 1) // pack_size  # Round up division
+                                    suggested_packs = min((prescribed_qty + pack_size - 1) // pack_size, qty_avail)  # Round up division, but cap at available quantity
                                 
                                 if pack_size > 1 and prescribed_qty > 0:
-                                    st.success(f"""💡 Suggestion: Order {suggested_packs} pack{'s' if suggested_packs > 1 else ''} to get {suggested_packs * pack_size} units
-                                        {f'' if suggested_packs * pack_size >= prescribed_qty else ''}
+                                    units_from_packs = suggested_packs * pack_size
+                                    st.success(f"""💡 Suggestion: Order {suggested_packs} pack{'s' if suggested_packs > 1 else ''} to get {units_from_packs} units
+                                        {f'(Note: This covers {units_from_packs} out of {prescribed_qty} prescribed units)' if units_from_packs < prescribed_qty else ''}
                                     """)
                                 
                                 # Add quantity selector
@@ -689,8 +701,8 @@ if uploaded_file:
 </table>"""
                                 st.markdown(table_html, unsafe_allow_html=True)
 
-                            # If medicine is out of stock, search for substitutes
-                            if qty_avail == 0:
+                            # If medicine is out of stock OR we need additional quantity, search for substitutes
+                            if qty_avail == 0 or need_substitutes:
                                 # Get all substitutes
                                 substitutes = []
                                 for i in range(5):  # Check substitute0 through substitute4
@@ -699,7 +711,10 @@ if uploaded_file:
                                         substitutes.append(sub.strip())
 
                                 if substitutes:
-                                    st.markdown("#### 🔄 Available Substitutes")
+                                    if qty_avail == 0:
+                                        st.markdown("#### 🔄 Available Substitutes")
+                                    else:
+                                        st.markdown(f"#### 🔄 Additional Substitutes Needed (for remaining {remaining_qty_needed} units)")
                                     
                                     # Get original medicine details for comparison
                                     original_med_info = {
@@ -714,6 +729,23 @@ if uploaded_file:
                                     substitute_results = process_substitutes(substitutes, original_med_info)
                                     
                                     for substitute, sub_med_info, best_match in substitute_results:
+                                        # Calculate suggested quantity for substitute based on remaining need
+                                        sub_pack_size = 1
+                                        sub_pack_size_label = sub_med_info.get('pack_size_label', '')
+                                        if sub_pack_size_label:
+                                            sub_pack_size_match = re.search(r'\d+', sub_pack_size_label)
+                                            if sub_pack_size_match:
+                                                sub_pack_size = int(sub_pack_size_match.group())
+                                        
+                                        # Calculate suggested packs for substitute
+                                        sub_qty_needed = remaining_qty_needed if need_substitutes else prescribed_qty
+                                        sub_suggested_packs = 0
+                                        if sub_pack_size > 0 and sub_qty_needed > 0:
+                                            sub_suggested_packs = min(
+                                                (sub_qty_needed + sub_pack_size - 1) // sub_pack_size,  # Round up division
+                                                sub_med_info['quantity_available']  # Cap at available quantity
+                                            )
+
                                         # Generate comparison prompt for Gemini
                                         comparison_prompt = f"""
                                         Compare these two medicines and provide a SHORT analysis about their substitutability:
@@ -888,10 +920,11 @@ if uploaded_file:
                                     st.session_state.cart.pop(item_name, None)
                                     cart_updated = True
                 
-                if cart_updated:
-                    st.success("Cart updated successfully!")
-                else:
-                    st.info("No changes made to cart. Select quantities and try again.")
+                st.success("Cart updated successfully!")
+                # if cart_updated:
+                #     st.success("Cart updated successfully!")
+                # else:
+                #     st.info("No changes made to cart. Select quantities and try again.")
 
         # End of update_cart_form
         
