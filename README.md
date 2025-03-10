@@ -30,7 +30,7 @@ MediScan is an intelligent prescription processing system designed to assist pha
 - **Backend:** FastAPI
 - **Database:** PostgreSQL (Supabase)
 - **AI/ML:** 
-  - Google Gemini 2.0 for prescription analysis
+  - Google Gemini API for prescription analysis
   - RapidFuzz for medicine matching
 - **Additional Libraries:**
   - FPDF for PDF generation
